@@ -1,0 +1,10 @@
+/.git
+/.venv
+/.vscode
+__pycache__
+db.sqlite3
+settings.py
+wsgi.py
+/media
+/static/admin
+/vegetablegarden/migrations

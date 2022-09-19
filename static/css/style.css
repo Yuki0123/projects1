@@ -1,0 +1,11 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: proxima-nova,'Sawarabi Gothic','Open Sans', sans-serif;
+}
+
+.title, h1,h2,h3,h4 {
+    font-family: proxima-nova,'M+ P Type-1 (basic latin) Black'; 
+    font-weight: 100;
+    font-style: normal;
+}

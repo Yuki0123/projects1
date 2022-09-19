@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{reminders}}
+
+{% with growingcrop=growingcrop.0 %}
+<div>
+    <div class="uk-card uk-card-default uk-card-body">
+        <span class="uk-badge">{{growingcrop.area}}</span>
+        <div class="uk-child-width-1-2" uk-grid>
+            <div class="uk-text-bold">{{growingcrop.vegetable}}</div> 
+            <div class="uk-text-right">
+                <a class="uk-link-text" type="button">
+                    <span uk-icon="icon:more-vertical"></span>
+                </a>
+                <div uk-dropdown="mode: click">
+                    <ul class="uk-nav uk-dropdown-nav">
+                        <li><a href="{% url 'vegetablegarden:growingcrop_update' growingcrop.pk %}">栽培情報を編集</a></li>
+                        <li><a href="{% url 'vegetablegarden:growingcrop_delete' growingcrop.pk %}">栽培情報を削除</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        
+        <span class="uk-text-small uk-text-light">{{growingcrop.variety|default:""}}</span><br>
+        <span class="uk-text-meta">
+        {% if growingcrop.seeding_date %}播種日 {{growingcrop.seeding_date|date:"Y-m-d"}}&nbsp;{% endif %}
+        {% if growingcrop.planting_date %}植付日 {{growingcrop.planting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+        {% if growingcrop.transplanting_date %}移植日 {{growingcrop.transplanting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+        {% if growingcrop.harvest_date_start %}収穫開始日 {{growingcrop.harvest_date_start|date:"Y-m-d"}}&nbsp;{% endif %}
+        {% if growingcrop.harvest_date_end %}収穫完了日 {{growingcrop.harvest_date_end|date:"Y-m-d"}}{% endif %}            
+        </span>
+    </div>
+</div>
+{% endwith %}
+
+<p>
+<a class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" href="{% url 'vegetablegarden:cropmanagement_create' growingcrop.0.pk %}">
+    <span uk-icon="icon:plus-circle">お世話記録を追加する</span></a>
+</p>
+
+
+{% if count != 0 %}
+{% for cropmanagement in cropmanagement_list %}
+<article class="uk-article">
+    <p class="uk-article-meta">{{ cropmanagement.date }}</p>
+    <p class="uk-text-bold uk-text-large">{{ cropmanagement.title }}</p>
+    <p>{{ cropmanagement.text|linebreaksbr }}</p>
+
+    {% if  cropmanagement.image %}
+    <a href="#modal-media-image" uk-toggle>
+        <img src="{{ cropmanagement.image.url }}" class="uk-width-1-2@s" alt=""/>
+    </a>
+    <div id="modal-media-image" class="uk-flex-top" uk-modal>
+        <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
+            <button class="uk-modal-close-outside" type="button" uk-close></button>
+            <img src="{{ cropmanagement.image.url }}" width="1800" height="1200" alt="">
+        </div>
+    </div>
+    {% endif %}
+
+    <p class="uk-text-right">
+    <a class="uk-button uk-button-text" href="{% url 'vegetablegarden:cropmanagement_update' cropmanagement.pk %}"><span uk-icon="pencil">編集</span></a>
+    &nbsp;&nbsp;
+    <a class="uk-button uk-button-text" href="{% url 'vegetablegarden:cropmanagement_delete' cropmanagement.pk %}"><span uk-icon="minus-circle">削除</span></a>
+    &nbsp;&nbsp;
+    <a class="uk-button uk-button-text" href="{% url 'vegetablegarden:reminder_create' cropmanagement.pk %}"><span uk-icon="clock">リマインダ―</span></a>
+    </p>
+
+</article>
+{% if not forloop.last %}<hr class="uk-devider">{% endif %}
+{% endfor %}
+{% endif %}
+
+
+
+{% endblock %}

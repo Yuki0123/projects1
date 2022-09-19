@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load tags %}
+
+{% block content %}
+<p class="uk-h4"><i uk-icon="file-edit"></i>&nbsp;予定表</p>
+<div class="uk-card uk-card-default uk-card-body">
+{% for reminder in reminders %}
+    <dl class="uk-description-list uk-link-heading">
+        <dd>
+            <div>
+                <a href="{% url 'vegetablegarden:cropmanagement_list' reminder.cropmanagement.growing_crop.pk %}">
+                <span class="uk-badge">{{reminder.cropmanagement.growing_crop.area}}</span>
+                <span class="uk-badge">{{reminder.cropmanagement.growing_crop.vegetable}}</span>
+                <span class="uk-badge">{{reminder.cropmanagement.growing_crop.variety}}</span><br>
+
+                <span>{{reminder.calculation_date|date:"Y-m-d"}}</span>
+                <span class="uk-text-bold">{{reminder.title}}</span>
+                <span>{{reminder.text}}</span>
+                </a>
+            </div>
+        </dd>
+    </dl>
+{% endfor %}
+</div>
+<br>
+<p class="uk-h4"><i uk-icon="file-edit"></i>&nbsp;最新のお世話記録</p>
+<div class="uk-card uk-card-default uk-card-body">
+{% for cropmanagement in cropmanagements %}
+<a class="uk-link-toggle" href="{% url 'vegetablegarden:cropmanagement_list' cropmanagement.growing_crop.pk %}">
+<dl class="uk-description-list uk-link-heading">
+    <dd class="">
+        <div class="uk-grid-small" uk-grid>
+            <div class="uk-width-expand">
+                <span class="uk-badge">{{cropmanagement.growing_crop.area|truncatechars:5}}</span>
+                <span class="uk-text-bold">{{cropmanagement.growing_crop.vegetable}}</span><br>
+                <span class="uk-text-meta uk-text-small">{{cropmanagement.growing_crop.variety|default:""|truncatechars:20}}</span>   
+            </div>
+            <div>{{cropmanagement.date|date:"Y-m-d"}}</div>
+        </div>
+    </dd>
+    <dt class="">
+        <div class="" uk-grid>
+        {% if cropmanagement.image %}
+        <div class="uk-width-auto"><img src="{{ cropmanagement.image.url }}" width="50"></div>
+        <div class="uk-width-expand"><span class="uk-text-bold">{{cropmanagement.title}}</span><br>{{cropmanagement.text|truncatechars:50}}</div>
+        {% else %}
+        <div class="uk-width-1-1"><span class="uk-text-bold">{{cropmanagement.title}}</span><br>{{cropmanagement.text|truncatechars:50}}</div>
+        {% endif %}
+        </div>
+    </dt>
+</dl>
+</a>
+{% if not forloop.last %}<hr class="uk-devider">{% endif %}
+
+{% endfor %}
+</div>
+<br>
+
+{% if growingcrop_list.count > 0 %}
+
+<ul uk-tab>
+    <li><a href="#"><i uk-icon="happy"></i>&nbsp;ただいま栽培中</a></li>
+    <li><a href="#"><i uk-icon="album"></i>&nbsp;栽培終了</a></li>
+</ul>
+
+<ul class="uk-switcher uk-margin">
+    <li>
+        {% regroup growingcrop_list by area as area_list %}
+        {% for area in area_list %}
+        <div class="uk-card uk-card-default uk-card-body">
+        {% for growingcrop in area.list %}
+        <p>
+            <span class="uk-badge">{{area.grouper|truncatechars:5}}</span>&nbsp;
+            <a class="uk-link-text" href="{% url 'vegetablegarden:cropmanagement_list' growingcrop.pk %}">
+            <span class="uk-text-bold">{{growingcrop.vegetable}}</span>&nbsp;
+            <span class="uk-text-small uk-text-light">{{growingcrop.variety|default:""}}</span>
+            </a>
+            <br>
+            <span class="uk-text-meta">
+            {% if growingcrop.seeding_date %}播種日 {{growingcrop.seeding_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if growingcrop.planting_date %}植付日 {{growingcrop.planting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if growingcrop.transplanting_date %}移植日 {{growingcrop.transplanting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if growingcrop.harvest_date_start %}収穫開始日 {{growingcrop.harvest_date_start|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if growingcrop.harvest_date_end %}収穫完了日 {{growingcrop.harvest_date_end|date:"Y-m-d"}}{% endif %}            
+            </span>
+        </p>
+        {% endfor %}
+        </div>
+        {% if not forloop.last %}<br>{% endif %}
+        {% endfor %}
+    </li>
+    <li>
+        {% regroup harvestedcrops by area as area_list %}
+        {% for area in area_list %}
+        <div class="uk-card uk-card-default uk-card-body">
+        {% for harvestedcrop in area.list %}
+        <p>
+            <span class="uk-badge">{{area.grouper|truncatechars:5}}</span>&nbsp;
+            <a class="uk-link-text" href="{% url 'vegetablegarden:cropmanagement_list' harvestedcrop.pk %}">
+            <span class="uk-text-bold">{{harvestedcrop.vegetable}}</span>&nbsp;
+            <span class="uk-text-small uk-text-light">{{harvestedcrop.variety|default:""}}</span>
+            </a>
+            <br>
+            <span class="uk-text-meta">
+            {% if harvestedcrop.seeding_date %}播種日 {{harvestedcrop.seeding_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if harvestedcrop.planting_date %}植付日 {{harvestedcrop.planting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if harvestedcrop.transplanting_date %}移植日 {{harvestedcrop.transplanting_date|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if harvestedcrop.harvest_date_start %}収穫開始日 {{harvestedcrop.harvest_date_start|date:"Y-m-d"}}&nbsp;{% endif %}
+            {% if harvestedcrop.harvest_date_end %}収穫完了日 {{harvestedcrop.harvest_date_end|date:"Y-m-d"}}{% endif %}            
+            </span>
+        </p>
+        {% endfor %}
+        </div>
+        {% if not forloop.last %}<br>{% endif %}
+        {% endfor %}
+    </li>
+</ul>
+{% endif %}
+{% endblock %}
