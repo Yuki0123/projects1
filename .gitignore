@@ -5,6 +5,8 @@ __pycache__
 db.sqlite3
 settings.py
 wsgi.py
+manage.py
 /media
 /static/admin
 /vegetablegarden/migrations
+.gitignore
