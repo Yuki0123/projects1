@@ -10,3 +10,5 @@ manage.py
 /static/admin
 /vegetablegarden/migrations
 .gitignore
+*.sql
+base0.html

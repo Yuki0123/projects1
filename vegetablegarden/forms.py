@@ -107,7 +107,8 @@ class ReminderCreateForm(forms.ModelForm):
         widgets = {
             'title' : forms.TextInput(attrs={'class': 'uk-input'}),
             'days': forms.TextInput(attrs={'class': 'uk-input'}),
-            'unit': forms.Select(attrs={'class': 'uk-select'}),
+            #'unit': forms.Select(attrs={'class': 'uk-select'}),
+            'unit' : forms.TextInput(attrs={'class': 'uk-input'}),
             'base_date':forms.TextInput(attrs={'class': 'uk-input', 'readonly':'readonly'}),
             'calculation_date': DateWidget(),
             'text': forms.Textarea(attrs={'class': 'uk-textarea'}),           

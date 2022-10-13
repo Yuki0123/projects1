@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tags %}
+
+{% block content %}
+<div class="uk-container uk-container-large">
+    {% include 'nav.html' %}
+    {% regroup cropmanagement_list by area as area_list %}
+    {% for area in area_list %}
+    <div class="uk-card uk-card-body uk-card-default uk-margin">
+        
+        <h4>{{area.grouper}}</h4>
+        <dl class="uk-description-list uk-description-list-divider uk-margin-small">
+        {% for item in area|filter_by_area %}
+            <dt><span>{{item.title}}</span></dt>
+            <dd>{{item.text}}</dd>
+            <dd><span class="uk-text-muted">{{item.date|date:"Y-m-d"}}</span></dd>
+        {% endfor %}
+        </dl>
+
+        {% regroup area|filter_by_row by row as mgroup_by_row_list %}
+        {% for mgroup_by_row in mgroup_by_row_list %}
+        <h4 style="background-color:rgba(204, 191, 134, 0.479);">
+        <span>{{mgroup_by_row.grouper.name}}</span>
+        </h4>
+            <dl class="uk-description-list uk-description-list-divider uk-margin-small">
+            {% for item in mgroup_by_row.list %}
+            <dt><span>{{item.title}}</span></dt>
+            <dd>{{item.text}}</dd>
+            <dd><span class="uk-text-muted">{{item.date|date:"Y-m-d"}}</span></dd>
+            {% endfor %}
+            </dl>
+
+        {% endfor %}
+
+        {% regroup area|filter_by_growingcrop by growing_crop as mgroup_by_growingcrop_list %}        {% for mgroup_by_growingcrop in mgroup_by_growingcrop_list %}
+        <ul uk-accordion>
+        <li class="uk-open">
+        <h4 class="uk-margin-remove uk-accordion-title" style="background-color:rgba(182, 204, 134, 0.479);">
+        <span>{{mgroup_by_growingcrop.grouper.vegetable}}</span>
+        <span class="uk-text-lighter uk-text-small">{{mgroup_by_growingcrop.grouper.variety|default_if_none:""}}</span>
+        </h4>
+        <div class="uk-column-1-4@m uk-text-lighter uk-text-small" style="background-color: rgba(235, 243, 217, 0.479);">
+            <p>畝：{{mgroup_by_growingcrop.grouper.row|default_if_none:" - "}}</p>
+            <p>播種日：{{mgroup_by_growingcrop.grouper.seeding_date|default_if_none:" - "|date:"Y-m-d"}}</p>
+            <p>植付日：{{mgroup_by_growingcrop.grouper.planting_date|default_if_none:" - "|date:"Y-m-d"}}</p>            
+        </div>
+        <dl class="uk-description-list uk-description-list-divider uk-margin-small uk-accordion-content">
+            {% for item in mgroup_by_growingcrop.list %}
+            <dt><span>{{item.title}}</span></dt>
+            <dd>{{item.text}}</dd>
+            <dd><span class="uk-text-muted">{{item.date|date:"Y-m-d"}}</span></dd>
+            {% endfor %}
+            </dl>
+        {% endfor %}
+        </li>
+        </ul>
+    </div>
+    {% endfor %}
+
+</div>
+    
+{% endblock %}

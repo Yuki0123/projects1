@@ -1,14 +1,36 @@
 import datetime
 from django.shortcuts import render
-from .models import Vegetable, GrowingCrop,CropManagement,Reminder
 from django.views import generic
 from django.urls import reverse_lazy,reverse
 from django.shortcuts import get_list_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
+
+from .models import Field,Vegetable, Row, GrowingCrop, CropManagement, Reminder
 from .forms import GrowingCropCreateForm, GrowingCropUpdateForm,CropManagementCreateForm,CropManagementUpdateForm,AreaCreateForm, ReminderCreateForm,VegetableCreateForm
 
 
 # Create your views here.
-class VegetableCreate(generic.FormView):
+class Top(LoginRequiredMixin,generic.ListView):
+    template_name = 'top.html'
+    model = CropManagement
+    field_pk = 0
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu_list'] = CropManagement.objects.values('area__field__name','area__field__pk').annotate(total = Count('area')).order_by('-area__field__pk')
+        context['field'] = self.field_pk
+        return context
+
+    def get_queryset(self):
+        if len(self.kwargs)==0:
+            self.field_pk = Field.objects.latest('pk').pk
+        else:
+            self.field_pk = self.kwargs['field_pk']
+
+        queryset = CropManagement.objects.filter(area__field=self.field_pk).order_by('area__name','row__name','growing_crop__vegetable','-date')
+        return queryset
+class VegetableCreate(LoginRequiredMixin,generic.FormView):
     form_class= VegetableCreateForm
     template_name="growingcrop_create.html"
     model = Vegetable        
@@ -24,7 +46,7 @@ class VegetableCreate(generic.FormView):
         self.object=form.save()
         return redirect('vegetablegarden:growingcrop_list')
 
-class GrowingCropList(generic.ListView):
+class GrowingCropList(LoginRequiredMixin,generic.ListView):
     model = GrowingCrop
     template_name="growingcrop_list.html"
 
@@ -40,7 +62,7 @@ class GrowingCropList(generic.ListView):
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user.pk,harvest_date_end__isnull=True).order_by('area__name')
 
-class GrowingCropCreate(generic.FormView):
+class GrowingCropCreate(LoginRequiredMixin,generic.FormView):
     form_class= GrowingCropCreateForm
     template_name="growingcrop_create.html"
     model = GrowingCrop        
@@ -57,7 +79,7 @@ class GrowingCropCreate(generic.FormView):
 
         return redirect('vegetablegarden:growingcrop_list')
 
-class GrowingCropUpdate(generic.UpdateView):
+class GrowingCropUpdate(LoginRequiredMixin,generic.UpdateView):
     form_class= GrowingCropUpdateForm
     template_name = 'growingcrop_update.html'
     model = GrowingCrop
@@ -75,7 +97,7 @@ class GrowingCropUpdate(generic.UpdateView):
         
         return redirect('vegetablegarden:growingcrop_list')
 
-class GrowingCropDelete(generic.DeleteView):
+class GrowingCropDelete(LoginRequiredMixin,generic.DeleteView):
     model=GrowingCrop
     template_name="growingcrop_delete.html"
     success_url=reverse_lazy('vegetablegarden:growingcrop_list')
@@ -85,7 +107,7 @@ class GrowingCropDelete(generic.DeleteView):
         context['title']='栽培している野菜の削除'
         return context
 
-class CropManagementList(generic.ListView):
+class CropManagementList(LoginRequiredMixin,generic.ListView):
     template_name="cropmanagement_list.html"
     model = CropManagement
     all_data=CropManagement.objects.all()
@@ -112,7 +134,7 @@ class CropManagementList(generic.ListView):
 
         return queryset
 
-class CropManagementCreate(generic.FormView):
+class CropManagementCreate(LoginRequiredMixin,generic.FormView):
     #form_class= CropManagementCreateForm
     form_class=CropManagementCreateForm
     template_name="cropmanagement_create.html"
@@ -136,7 +158,7 @@ class CropManagementCreate(generic.FormView):
         self.object=form.save()
         return redirect('vegetablegarden:cropmanagement_list', growingcrop_pk=self.kwargs['growingcrop_pk'])
 
-class CropManagementUpdate(generic.UpdateView):
+class CropManagementUpdate(LoginRequiredMixin,generic.UpdateView):
     form_class= CropManagementUpdateForm
     template_name = 'cropmanagement_update.html'
     model = CropManagement
@@ -157,7 +179,7 @@ class CropManagementUpdate(generic.UpdateView):
         return redirect('vegetablegarden:cropmanagement_list', growingcrop_pk=self.object.growing_crop.pk)
 
 
-class CropManagementDelete(generic.DeleteView):
+class CropManagementDelete(LoginRequiredMixin,generic.DeleteView):
     model=CropManagement
     template_name="cropmanagement_delete.html"
     #success_url=reverse_lazy('vegetablegarden:growingcrop_list')
@@ -172,7 +194,7 @@ class CropManagementDelete(generic.DeleteView):
         return reverse('vegetablegarden:cropmanagement_list', kwargs={"growingcrop_pk":self.object.growing_crop.pk})
 
 
-class ReminderCreate(generic.FormView):
+class ReminderCreate(LoginRequiredMixin,generic.FormView):
     form_class= ReminderCreateForm
     template_name="reminder_create.html"
     model = Reminder        

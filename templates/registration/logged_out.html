@@ -2,14 +2,19 @@
 
 {% block title %}Logout{% endblock %}
 
-{% block content %}
-<h1>Logged Out</h1>
-<p>Thanks for spending some quality time with the Web site today.</p>
 
-<a class="button is-primary" href="{% url 'login' %}">
-    <span class="icon">
-        <i class="fas fa-arrow-right"></i>
-    </span>
-    <span>Log in again</span>
-</a>
+{% block content %}
+<div class="uk-container uk-container-large uk-padding">
+    <div class="uk-section uk-section-secondary uk-padding">
+        <h3>Logged Out</h3>
+        <p>Thanks for spending some quality time with the Web site today.</p>
+
+        <a class="uk-button uk-link-text" href="{% url 'login' %}">
+            <span uk-icon="icon: arrow-right"></span>
+            <span>Log in again</span>
+        </a>
+    </div>
+</div>
+
+
 {% endblock %}

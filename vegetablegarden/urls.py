@@ -18,7 +18,9 @@ from . import views
 app_name = 'vegetablegarden'
 
 urlpatterns = [
-   path('', views.GrowingCropList.as_view(), name = 'growingcrop_list'),
+   path('',views.Top.as_view(), name = 'top'),
+   path('<int:field_pk>',views.Top.as_view(), name = 'top'),
+   path('growingcrop_list/', views.GrowingCropList.as_view(), name = 'growingcrop_list'),
    path('growingcrop_create/',views.GrowingCropCreate.as_view(), name='growingcrop_create'),
    path('growingcrop/<int:pk>/update/',views.GrowingCropUpdate.as_view(), name='growingcrop_update'),
    path('growingcrop/<int:pk>/delete/',views.GrowingCropDelete.as_view(), name='growingcrop_delete'),

@@ -1,0 +1,11 @@
+html, body {
+    font-family: a-otf-ud-shin-maru-go-pr6n, sans-serif;
+    font-weight: 50;
+    font-size:medium;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: a-otf-ud-shin-maru-go-pr6n, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+}

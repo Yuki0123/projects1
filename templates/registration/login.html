@@ -1,42 +1,48 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h1>ログイン</h1>
-{% if form.errors %}
-<p class="error-msg">Your username and password didn't match. Please try again.</p>
-{% endif %}
+<div class="uk-container uk-container-large uk-padding">
+    <div class="uk-section uk-section-secondary uk-padding">
+        <h3>Login</h3>
+        {% if form.errors %}
+        <p class="error-msg">Your username and password didn't match. Please try again.</p>
+        {% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p class="error-msg">Your account doesn't have access to this page. To proceed,
-        please login with an account that has access.</p>
-    {% else %}
-    <p class="error-msg">Please login to see this page.</p>
-    {% endif %}
-{% endif %}
+        {% if next %}
+        {% if user.is_authenticated %}
+            <p class="error-msg">Your account doesn't have access to this page. To proceed,
+                please login with an account that has access.</p>
+        {% else %}
+            <p class="error-msg">Please login to see this page.</p>
+        {% endif %}
+        {% endif %}
 
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="field">
-        <label class="label">{{ field.label_tag }}</label>
-        <div class="control">
-        {{ field|add_class:"input" }}
-        {{ field.errors }}
-        </div>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-text-success" uk-icon="icon: user"></span>
+                    {{form.username|add_class:"uk-input uk-default"}}
+                    {{form.username.errors}}
+                </div>
+            </div>
+        
+            <div class="uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip uk-text-success" uk-icon="icon: lock"></span>
+                    {{form.password|add_class:"uk-input"}}
+                    {{form.password.errors}}
+                </div>
+            </div>
+            <button class="uk-button uk-button-default">Login</button>
+        
+            <input type="hidden" name="next" value="{{ next }}"/>
+        </form>
     </div>
-    {% endfor %}
-    
-    <div class="field">
-        <p class="control">
-          <button class="button is-success">
-            Login
-          </button>
-        </p>
-    </div>
+</div>
 
-    <input type="hidden" name="next" value="{{ next }}"/>
-</form>
+
 {% endblock %}

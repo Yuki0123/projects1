@@ -1,0 +1,26 @@
+{% load tags %}
+<div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+    <nav uk-navbar="align: right;">
+        <div class="uk-navbar-right">
+            <button class="uk-button uk-button-secondary" type="button">menu</button>
+            <div class="uk-navbar-dropdown">
+                {% for menu in menu_list %}
+                <ul class="uk-nav uk-navbar-dropdown-nav">
+                    {% if menu.area__field__pk == field %}
+                    <li class="uk-active">
+                    {% else %}
+                    <li>
+                    {% endif %}
+                        <a href="{% url 'vegetablegarden:top' menu.area__field__pk %}">
+                            {{menu.area__field__name}}
+                        </a>
+                    </li>
+                </ul>
+                {% endfor %}
+                <p uk-margin>
+                    <button class="uk-button uk-button-default uk-width-1-1">logout</button>
+                </p>
+            </div>
+        </div>
+    </nav>
+</div>
