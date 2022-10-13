@@ -9,3 +9,17 @@
 </div>
 <p><a href="javascript:history.back()">&lt; Back</a></p>
 {% endblock %}
+
+{% block content %}
+<div class="uk-container uk-container-large uk-padding">
+    <div class="uk-section uk-section-secondary uk-padding">
+        <h3>404 Page Not Found</h3>
+        <p>The requested URL {{ request.get_full_path }} was not found on this server.</p>
+
+        <a class="uk-button uk-link-text" href="javascript:history.back()">
+            <span uk-icon="icon: arrow-left"></span>
+            <span>Back</span>
+        </a>
+    </div>
+</div>
+{% endblock %}
