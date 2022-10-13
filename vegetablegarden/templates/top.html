@@ -3,11 +3,11 @@
 {% load tags %}
 
 {% block content %}
-<div class="uk-container uk-container-large">
+<div class="uk-container uk-container-large uk-padding-small">
     {% include 'nav.html' %}
     {% regroup cropmanagement_list by area as area_list %}
     {% for area in area_list %}
-    <div class="uk-card uk-card-body uk-card-default uk-margin">
+    <div class="uk-card uk-card-body uk-card-default uk-margin uk-padding-small">
         
         <h4>{{area.grouper}}</h4>
         <dl class="uk-description-list uk-description-list-divider uk-margin-small">
@@ -37,13 +37,13 @@
         <ul uk-accordion>
         <li class="uk-open">
         <h4 class="uk-margin-remove uk-accordion-title" style="background-color:rgba(182, 204, 134, 0.479);">
-        <span>{{mgroup_by_growingcrop.grouper.vegetable}}</span>
+        <span>{{mgroup_by_growingcrop.grouper.vegetable}}</span><br>
         <span class="uk-text-lighter uk-text-small">{{mgroup_by_growingcrop.grouper.variety|default_if_none:""}}</span>
         </h4>
-        <div class="uk-column-1-4@m uk-text-lighter uk-text-small" style="background-color: rgba(235, 243, 217, 0.479);">
-            <p>畝：{{mgroup_by_growingcrop.grouper.row|default_if_none:" - "}}</p>
-            <p>播種日：{{mgroup_by_growingcrop.grouper.seeding_date|default_if_none:" - "|date:"Y-m-d"}}</p>
-            <p>植付日：{{mgroup_by_growingcrop.grouper.planting_date|default_if_none:" - "|date:"Y-m-d"}}</p>            
+        <div class="uk-text-lighter uk-text-small" style="background-color: rgba(235, 243, 217, 0.479);">
+            <span>畝：{{mgroup_by_growingcrop.grouper.row|default_if_none:" - "}}</span><br>
+            <span>播種日：{{mgroup_by_growingcrop.grouper.seeding_date|default_if_none:" - "|date:"Y-m-d"}}</span><br>
+            <span>植付日：{{mgroup_by_growingcrop.grouper.planting_date|default_if_none:" - "|date:"Y-m-d"}}</span>            
         </div>
         <dl class="uk-description-list uk-description-list-divider uk-margin-small uk-accordion-content">
             {% for item in mgroup_by_growingcrop.list %}
