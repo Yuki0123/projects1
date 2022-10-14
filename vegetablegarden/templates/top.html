@@ -3,7 +3,7 @@
 {% load tags %}
 
 {% block content %}
-<div class="uk-container uk-container-large uk-padding-small">
+<div class="uk-container uk-container-large  uk-padding-small uk-padding-remove-top">
     {% include 'nav.html' %}
     {% regroup cropmanagement_list by area as area_list %}
     {% for area in area_list %}
